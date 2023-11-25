@@ -1,15 +1,16 @@
 import { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeLayout from "./layouts/HomeLayout";
 import Loader from "./components/Loader";
 import { Toaster } from "react-hot-toast";
 
 const Home = lazy(() => import("./pages/Home"));
 const Settings = lazy(() => import("./pages/Settings"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
-    <Router>
+    <>
       <Routes>
         <Route element={<HomeLayout />}>
           <Route
@@ -28,10 +29,18 @@ function App() {
               </Suspense>
             }
           />
+          <Route
+            path="/*"
+            element={
+              <Suspense fallback={<Loader />}>
+                <NotFound />
+              </Suspense>
+            }
+          />
         </Route>
       </Routes>
       <Toaster />
-    </Router>
+    </>
   );
 }
 
