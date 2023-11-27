@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 import connectDB from "./config/connectDB.js";
 import subscriptionRoutes from "./routes/subscription.js";
 import { config } from "dotenv";
 config();
 
+const __dirname = path.resolve();
 const app = express();
 
 const corsOptions = {
@@ -19,6 +21,15 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/v1/subscription", subscriptionRoutes);
+
+// for deployment
+app.use(express.static(path.join(__dirname, "/task-overlay-client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "task-overlay-client", "dist", "index.html")
+  );
+});
 
 // middleware for error handling
 app.use((err, req, res, next) => {
