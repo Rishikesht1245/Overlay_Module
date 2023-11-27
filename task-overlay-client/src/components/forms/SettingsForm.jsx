@@ -33,7 +33,7 @@ const SettingsForm = ({ fetchHandler }) => {
       ) : (
         <Formik
           initialValues={
-            settings
+            settings && typeof settings === "object"
               ? settings
               : {
                   title: "",
@@ -52,6 +52,7 @@ const SettingsForm = ({ fetchHandler }) => {
               .then(({ data }) => {
                 setSettings(data.data);
                 toast.success(data.message);
+                setErrorMessage(null);
               })
               .catch(({ response }) => {
                 setErrorMessage(
@@ -59,7 +60,9 @@ const SettingsForm = ({ fetchHandler }) => {
                 );
                 setSettings(null);
               })
-              .finally(() => setSubmitting(false));
+              .finally(() => {
+                setSubmitting(false);
+              });
           }}
         >
           {({ isSubmitting }) => (
