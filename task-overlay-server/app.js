@@ -6,7 +6,6 @@ import subscriptionRoutes from "./routes/subscription.js";
 import { config } from "dotenv";
 config();
 
-const __dirname = path.resolve();
 const app = express();
 
 const corsOptions = {
@@ -20,14 +19,17 @@ app.use(cors(corsOptions));
 app.use(express.json());
 connectDB();
 
+console.log(process.env.SECRET_KEY);
+
 app.use("/api/v1/subscription", subscriptionRoutes);
 
 // for deployment
-app.use(express.static(path.join(__dirname, "/task-overlay-client/dist")));
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/task-overlay-server/dist")));
 
 app.get("*", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "task-overlay-client", "dist", "index.html")
+    path.join(__dirname, "task-overlay-server", "dist", "index.html")
   );
 });
 
